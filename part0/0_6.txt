@@ -1,0 +1,10 @@
+Create a diagram depicting the situation where the user 
+creates a new note using the single page version of the app.
+
+user once again types a note and clicks 'Save'
+browser->server: HTTP POST /exampleapp/new_note_spa
+this time theres no redirect so no HTTP requests are needed..
+instead the form.onSubmit inside the js file saves the new note to a local array and triggers both redrawNotes() and sendToServer()
+local 'redrawNotes' happens
+xhttp inside sendToServer(): browser->server: HTTP POST /exampleapp/new_note_sp (content-type: application/json)
+server adds the new note to its note collection

@@ -1,0 +1,22 @@
+Create a similar diagram depicting the situation where the user creates a new note on page 
+https://studies.cs.helsinki.fi/exampleapp/notes by writing something into the text field and 
+clicking the submit button.
+
+user types a note and clicks 'Save'
+browser->server: HTTP POST /exampleapp/new_note
+server-side note add was successful, continuing...
+server->browser: status code 302 (redirect) -> /exampleapp/notes
+browser->server: HTTP POST /exampleapp/notes
+server->browser: HTML-code
+browser->server: /main.css
+server->browser: HTTP GET /exampleapp/main.css
+browser->server: /main.js
+server->browser: HTTP GET /exampleapp/main.js
+
+browser starts executing the js file that makes the request for the JSON data
+
+browser->server: HTTP GET /exampleapp/data.json
+server->browser: [{json data...}]
+
+event handler executed because of the json request
+handler function lists the json data inside of the website's ul-element

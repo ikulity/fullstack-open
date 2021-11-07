@@ -1,0 +1,15 @@
+Create a diagram depicting the situation where the user goes to the single page app 
+version of the notes app at https://studies.cs.helsinki.fi/exampleapp/spa.
+
+browser->server: HTTP GET /exampleapp/spa
+server->browser: HTML-code
+browser->server: HTTP GET /exampleapp/main.css
+server->browser: main.css
+browser->server: HTTP GET /exampleapp/main.js
+server->browser: main.js
+
+browser executes the js code...
+browser->server: HTTP GET /exampleapp/data.json
+
+event handler executed because of the json request
+redrawNotes-function called inside the event handler, which then lists the json data as the ul-element
