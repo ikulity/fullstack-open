@@ -12,6 +12,7 @@ const Content = ({ parts }) => {
       <Part title={parts[0].name} count={parts[0].exercises} />
       <Part title={parts[1].name} count={parts[1].exercises} />
       <Part title={parts[2].name} count={parts[2].exercises} />
+      <Part title={parts[3].name} count={parts[3].exercises} />
     </div>
   )
 }
@@ -26,7 +27,7 @@ const Part = ({ title, count }) => {
 
 const Total = ({ parts }) => {
   return (
-    <p>Number of exercises {parts[0].exercises + parts[1].exercises + parts[2].exercises}</p>
+    <p><b>total of {parts[0].exercises + parts[1].exercises + parts[2].exercises + parts[3].exercises} exercises</b></p>
   )
 }
 
@@ -59,6 +60,11 @@ const App = () => {
         name: 'State of a component',
         exercises: 14,
         id: 3
+      },
+      {
+        name: 'Redux',
+        exercises: 11,
+        id: 4
       }
     ]
   }
