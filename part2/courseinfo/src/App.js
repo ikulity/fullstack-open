@@ -27,7 +27,7 @@ const Part = ({ title, count }) => {
 
 const Total = ({ parts }) => {
   return (
-    <p><b>total of {parts[0].exercises + parts[1].exercises + parts[2].exercises + parts[3].exercises} exercises</b></p>
+    <p><b>total of {parts.reduce((prev, cur) => ({ exercises: prev.exercises + cur.exercises })).exercises} exercises</b></p>
   )
 }
 
