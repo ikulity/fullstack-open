@@ -13,7 +13,6 @@ const App = () => {
     const newMatches = countries.filter(({ name }) => {
       return name.common.toLowerCase().includes(event.target.value.toLowerCase())
     })
-    console.log("matches: ", newMatches)
     setSearch(event.target.value)
     setMatches(newMatches)
   }
@@ -25,12 +24,17 @@ const App = () => {
       })
   }, [])
 
+  const showCountry = (country) => () => {
+    setSearch(country.name.common)
+    setMatches([country])
+  }
+
   const filterLogic = () => {
     if (matches.length > 10) {
       return <p>Too many matches, keep typing!!</p>
     } else if (matches.length > 1) {
       return matches.map((match) => {
-        return <p>{match.name.common}</p>
+        return <p>{match.name.common} <button onClick={showCountry(match)}>show</button></p>
       })
     } else if (matches.length === 1) {
       return <CountryStats country={matches[0]} />
