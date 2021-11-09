@@ -52,6 +52,9 @@ const App = () => {
   const [newNumber, setNewNumber] = useState('')
   const [filter, setFilter] = useState('')
 
+  const [message, setMessage] = useState(null)
+  const [isError, setIsError] = useState(true)
+
   useEffect(() => {
     personService.getAll().then((persons) => {
       setPersons(persons)
@@ -68,6 +71,7 @@ const App = () => {
         personService.update(personId, newPerson)
         const updatedPersons = persons.map(person => person.id === personId ? { ...person, number: newNumber } : person)
         setPersons(updatedPersons)
+        showMessage(`Updated ${newName}`)
       }
     } else {
       // Create a new 'person'
@@ -76,6 +80,7 @@ const App = () => {
       })
       setNewName('')
       setNewNumber('')
+      showMessage(`Added ${newName}`)
     }
   }
   const handleNameChange = (event) => {
@@ -93,6 +98,8 @@ const App = () => {
       // Delete from backend
       personService.remove(id).then(() => {
         console.log('person deleted...')
+      }).catch(() => {
+        showMessage(`Information of ${name} has already been removed from server`, true)
       })
       // Delete from state
       const newPersons = persons.filter(person => person.id !== id)
@@ -100,9 +107,20 @@ const App = () => {
     }
   }
 
+  // function for setting up the notification message, default type is a regular message (green)
+  // setting 'isError' to true changes it to an error message (red)
+  const showMessage = (message, isError = false) => {
+    setIsError(isError)
+    setMessage(message)
+    setTimeout(() => {
+      setMessage(null)
+    }, 5000)
+  }
+
   return (
     <div>
       <h2>Phonebook</h2>
+      <Notification message={message} isError={isError} />
       <Filter filter={filter} handleFilterChange={handleFilterChange} />
 
       <h3>Add a new</h3>
@@ -110,6 +128,16 @@ const App = () => {
 
       <h3>Numbers</h3>
       <Persons filter={filter} persons={persons} deleteHandler={handleDelete} />
+    </div>
+  )
+}
+
+const Notification = ({ message, isError }) => {
+  if (message === null) return null
+
+  return (
+    <div className={`${isError ? "error" : "message"} notification`} >
+      {message}
     </div>
   )
 }
