@@ -3,7 +3,7 @@ import axios from 'axios'
 
 const App = () => {
 
-  const requestUrl = 'https://restcountries.com/v3.1/all'
+  const countryUrl = 'https://restcountries.com/v3.1/all'
   const [search, setSearch] = useState('')
   const [matches, setMatches] = useState([])
   const [countries, setCountries] = useState([])
@@ -18,7 +18,7 @@ const App = () => {
   }
 
   useEffect(() => {
-    axios.get(requestUrl)
+    axios.get(countryUrl)
       .then((response) => {
         setCountries(response.data)
       })
@@ -52,6 +52,18 @@ const App = () => {
 }
 
 const CountryStats = ({ country }) => {
+  const weatherUrl = 'http://api.weatherstack.com/'
+  const api_key = process.env.REACT_APP_API_KEY
+  const [weatherData, setWeatherData] = useState(null)
+
+  useEffect(() => {
+    axios.get(`${weatherUrl}/current?access_key=${api_key}&query=${country.capital[0]}`)
+      .then((response) => {
+        setWeatherData(response.data)
+        console.log("RESPONSE DATA: ", response.data)
+      })
+  }, [])
+
   return (
     <div>
       <h1>{country.name.common}</h1>
@@ -67,10 +79,24 @@ const CountryStats = ({ country }) => {
         }
       </ul>
       <img src={country.flags.png} alt="country flag" />
+
+      {
+        weatherData ? <WeatherStats weatherData={weatherData} capital={country.capital[0]} /> : <></>
+      }
     </div>
   )
 }
 
+const WeatherStats = ({ weatherData, capital }) => {
+  return (
+    <div>
+      <h2>Weather in {capital}</h2>
+      <p><b>temperature:</b> {weatherData.current.temperature} Celcius</p>
+      <img src={weatherData.current.weather_icons[0]} alt="weather icon" />
+      <p><b>wind:</b> {weatherData.current.wind_speed} mph direction {weatherData.current.wind_dir}</p>
+    </div>
+  )
+}
 
 
 export default App;
