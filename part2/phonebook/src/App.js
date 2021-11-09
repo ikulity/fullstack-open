@@ -61,19 +61,23 @@ const App = () => {
   const handleSubmit = (event) => {
     event.preventDefault()
     const newPerson = { name: newName, number: newNumber }
-    if (!persons.some(person => person.name === newName)) {
-      setPersons(persons.concat(newPerson))
-      // SEND PERSON TO SERVER
+    if (persons.some(person => person.name === newName)) {
+      if (window.confirm(`${newName} is already added to phonebook, replace the old number with a new one?`)) {
+        // Update a person's number
+        const personId = persons.find(person => person.name === newName).id
+        personService.update(personId, newPerson)
+        const updatedPersons = persons.map(person => person.id === personId ? { ...person, number: newNumber } : person)
+        setPersons(updatedPersons)
+      }
+    } else {
+      // Create a new 'person'
       personService.create(newPerson).then((response) => {
-        console.log("new person response: ", response)
+        setPersons(persons.concat(response))
       })
       setNewName('')
       setNewNumber('')
-      return
     }
-    alert(`${newName} is already added to phonebook`)
   }
-
   const handleNameChange = (event) => {
     setNewName(event.target.value)
   }
