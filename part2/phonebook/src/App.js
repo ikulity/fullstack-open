@@ -27,16 +27,22 @@ const PersonForm = ({ handleSubmit, newName, newNumber, nameChange, numberChange
   )
 }
 
-const Persons = ({ filter, persons }) => {
+const Persons = ({ filter, persons, deleteHandler }) => {
   const filterName = ({ name }) => {
     return name.toLowerCase().includes(filter.toLowerCase())
   }
   return (
     <ul>
       {filter === ''
-        ? persons.map((person) => <li key={person.name}>{person.name} {person.number}</li>)
-        : persons.filter(filterName).map((person) => <li key={person.name}>{person.name} {person.number}</li>)}
+        ? persons.map((person) => <Contact name={person.name} number={person.number} id={person.id} deleteHandler={deleteHandler} key={person.id} />)
+        : persons.filter(filterName).map((person) => <Contact name={person.name} number={person.number} id={person.id} deleteHandler={deleteHandler} key={person.id} />)}
     </ul>
+  )
+}
+
+const Contact = ({ name, number, id, deleteHandler }) => {
+  return (
+    <li>{name} {number} <button onClick={deleteHandler(id, name)}>delete</button></li>
   )
 }
 
@@ -78,6 +84,18 @@ const App = () => {
     setFilter(event.target.value)
   }
 
+  const handleDelete = (id, name) => () => {
+    if (window.confirm(`Delete ${name} from phonebook?`)) {
+      // Delete from backend
+      personService.remove(id).then(() => {
+        console.log('person deleted...')
+      })
+      // Delete from state
+      const newPersons = persons.filter(person => person.id !== id)
+      setPersons(newPersons)
+    }
+  }
+
   return (
     <div>
       <h2>Phonebook</h2>
@@ -87,7 +105,7 @@ const App = () => {
       <PersonForm handleSubmit={handleSubmit} newName={newName} newNumber={newNumber} nameChange={handleNameChange} numberChange={handleNumberChange} />
 
       <h3>Numbers</h3>
-      <Persons filter={filter} persons={persons} />
+      <Persons filter={filter} persons={persons} deleteHandler={handleDelete} />
     </div>
   )
 }
